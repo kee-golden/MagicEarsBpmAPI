@@ -1,0 +1,28 @@
+server:
+  port: @server.port@
+  context-path: @server.context.path@
+  tomcat:
+    max-threads: 2000
+
+spring:
+    http:
+      multipart.maxFileSize: 100Mb
+      maxRequestSize: 1000Mb
+      encoding:
+        charset: UTF-8
+        enabled: true
+        force: true
+    datasource:
+        url: @jdbc.url@?useUnicode=true&characterEncoding=utf8
+        username: @jdbc.username@
+        password: @jdbc.password@
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  mapperLocations: classpath:dao/*.xml
+  typeAliasesPackage: com.magicears.bpm.dao
+
+
+system:
+  filePath: @system.filePath@

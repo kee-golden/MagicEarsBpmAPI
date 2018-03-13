@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间,作用就是对sql进行分类化管理,理解sql隔离
+注意:使用mapper代理方法开发,namespace有特殊重要的作用,namespace等于mapper接口地址-->
+<mapper namespace="com.magicears.bpm.dao.UserAuthInfoDao">
+
+    <resultMap id="userAuthInfoMap" type="com.magicears.bpm.auth.entity.UserAuthInfo">
+        <id column="u_id" property="id"/>
+        <collection property="privilegeList" ofType="com.magicears.bpm.auth.entity.PrivilegeAuthInfo">
+            <id column="id" property="id"/>
+            <id column="name" property="name"/>
+            <id column="code" property="code"/>
+            <id column="type" property="type"/>
+            <id column="action" property="action"/>
+        </collection>
+    </resultMap>
+
+    <select id="findByUserId" parameterType="long" resultMap="userAuthInfoMap">
+        SELECT
+        u.id AS u_id,p.name,p.code,p.type,p.action
+        FROM USER u
+        LEFT JOIN user_role ur ON u.`id` = ur.`user_id`
+        LEFT JOIN role_privilege rp ON ur.`role_id` = rp.`role_id`
+        LEFT JOIN privilege p ON rp.`privilege_id` = p.`id`
+        WHERE u.`id` = #{userId}
+    </select>
+
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间,作用就是对sql进行分类化管理,理解sql隔离
+注意:使用mapper代理方法开发,namespace有特殊重要的作用,namespace等于mapper接口地址-->
+<mapper namespace="com.magicears.bpm.dao.UserDao">
+
+    <resultMap id="userMap" type="com.magicears.bpm.entity.User">
+        <id column="id" property="id"/>
+        <id column="department_id" property="departmentId"/>
+        <result column="login_name" property="loginName"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="real_name" property="realName"/>
+        <result column="status" property="status"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_at" property="updateAt"/>
+    </resultMap>
+
+    <sql id="userBasicSql">
+        id, department_id, login_name,sex, password, create_at, update_at,phone,real_name,email,status
+    </sql>
+
+
+    <select id="findByUsername" resultMap="userMap">
+        SELECT
+        <include refid="userBasicSql"/>
+        FROM user
+        WHERE login_name = #{userName};
+    </select>
+
+</mapper>

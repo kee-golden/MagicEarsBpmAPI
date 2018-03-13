@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.magicears.bpm.dao.RoleDao">
+    <resultMap id="roleResultMap" type="com.magicears.bpm.entity.Role">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <resultMap id="userRoleResultMap" type="com.magicears.bpm.entity.UserRole">
+        <id property="id" column="id"/>
+        <result property="role.name" column="name"/>
+        <result property="role.code" column="code"/>
+        <result property="user.id" column="user_id"/>
+    </resultMap>
+
+
+    <sql id="roleBasicMap">
+        id, name, code, create_at, update_at, description
+    </sql>
+
+    <select id="findByUser" resultMap="userRoleResultMap">
+        SELECT
+        r.*, ar.user_id
+        FROM
+        user_role ar
+        LEFT JOIN role r ON ar.role_id = r.id
+        <if test="user != null">
+            WHERE ar.user_id = #{user.id}
+        </if>
+    </select>
+
+</mapper>

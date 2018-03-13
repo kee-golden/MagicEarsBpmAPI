@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.magicears.bpm.dao.MenuDao">
+    <resultMap id="menuMap" type="com.magicears.bpm.entity.Menu">
+        <id column="id" property="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="type" column="type"/>
+        <result property="icon" column="icon"/>
+        <result property="target" column="target"/>
+        <result property="action" column="action"/>
+        <result property="sort" column="sort"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+        <association property="parent" javaType="com.magicears.bpm.entity.Menu">
+            <id column="parent_id" property="id"/>
+        </association>
+    </resultMap>
+
+    <sql id="menuBasicSql">
+        id, name, code,icon, type, action,sort, create_at, update_at, parent_id,target
+    </sql>
+
+    <select id="findAllByUserId" resultMap="menuMap">
+        SELECT DISTINCT menu.*
+        FROM user_role user_role
+        LEFT JOIN role_menu role_menu ON user_role.role_id = role_menu.role_id
+        LEFT JOIN menu menu ON role_menu.menu_id = menu.id
+        WHERE user_role.user_id = #{userId} order by menu.sort
+    </select>
+
+
+</mapper>
