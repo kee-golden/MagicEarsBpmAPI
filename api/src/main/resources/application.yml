@@ -18,6 +18,8 @@ spring:
         password: @jdbc.password@
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
+    activiti:
+      check-process-definitions: false
 
 mybatis:
   mapperLocations: classpath:dao/*.xml
