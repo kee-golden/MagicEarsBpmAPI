@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Created by admin on 2018/3/8.
  */
@@ -14,4 +16,6 @@ import org.springframework.stereotype.Component;
 public interface UserDao extends BaseMapper<User> {
 
     User findByUsername(@Param("userName") String userName);
+
+    List<User> findByDepartmentId(Long departmentId);
 }

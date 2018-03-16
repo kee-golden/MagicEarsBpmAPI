@@ -44,7 +44,6 @@ public class JwtAuthHandler {
         String translateUri = RequestMatcher.translation(uri) + "[" + requestMethod + "]";
         boolean flag = false;
         for (PrivilegeAuthInfo privilege: privileges) {
-            System.out.println(privilege.getAction() + "[" + PrivilengeType.getMessage(privilege.getType()) + "]");
             if ((privilege.getAction() + "[" + PrivilengeType.getMessage(privilege.getType()) + "]").equals(translateUri)){
                 flag = true;
                 break;

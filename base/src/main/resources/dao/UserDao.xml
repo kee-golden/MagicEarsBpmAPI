@@ -30,4 +30,12 @@
         WHERE login_name = #{userName};
     </select>
 
+
+    <select id="findByDepartmentId" resultMap="userMap">
+        SELECT
+        <include refid="userBasicSql"/>
+        FROM user
+        WHERE department_id = #{departmentId}
+    </select>
+
 </mapper>

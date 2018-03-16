@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.magicears.bpm.dao.PrivilegeDao">
+    <resultMap id="privilegeMap" type="com.magicears.bpm.entity.Privilege">
+        <id column="id" property="id"/>
+        <result property="name" column="name"/>
+        <result property="code" column="code"/>
+        <result property="type" column="type"/>
+        <result property="icon" column="icon"/>
+        <result property="action" column="action"/>
+        <result property="sort" column="sort"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+        <association property="parent" javaType="com.magicears.bpm.entity.Privilege">
+            <id column="parent_id" property="id"/>
+        </association>
+    </resultMap>
+
+    <sql id="privilegeBasicSql">
+        id, name, code,icon, type, action,sort, create_at, update_at, parent_id
+    </sql>
+
+    <select id="find" resultMap="privilegeMap">
+        SELECT
+        <include refid="privilegeBasicSql"/>
+        FROM privilege
+        WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="privilegeMap">
+        SELECT
+        <include refid="privilegeBasicSql"/>
+        FROM privilege;
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.magicears.bpm.entity.Privilege">
+        INSERT INTO privilege
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="action != null">
+                action,
+            </if>
+            <if test="parent != null">
+                parent_id,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="icon != null">
+                #{icon},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="action != null">
+                #{action},
+            </if>
+            <if test="parent != null">
+                #{parent.id},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="createAt != null">
+                #{createAt},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.magicears.bpm.entity.Privilege">
+        UPDATE privilege SET
+        <trim suffix="" suffixOverrides=",">
+            <if test="code!=null">
+                code=#{code},
+            </if>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="type!=null">
+                type=#{type},
+            </if>
+            <if test="icon!=null">
+                icon=#{icon},
+            </if>
+            <if test="action!=null">
+                action=#{action},
+            </if>
+            <if test="parent!=null">
+                parent_id=#{parent.id},
+            </if>
+            <if test="sort!=null">
+                sort=#{sort},
+            </if>
+            <if test="createAt!=null">
+                create_at=#{createAt},
+            </if>
+            <if test="updateAt==null">
+                update_at=#{updateAt},
+            </if>
+        </trim>
+        WHERE id=#{id}
+    </update>
+
+
+    <select id="findParents" resultMap="privilegeMap">
+        SELECT
+        <include refid="privilegeBasicSql"/>
+
+        FROM privilege
+        WHERE parent_id IS NULL;
+    </select>
+
+    <select id="findByParentId" resultMap="privilegeMap">
+        SELECT
+        <include refid="privilegeBasicSql"/>
+
+        FROM privilege
+        WHERE parent_id = #{parentId};
+    </select>
+
+
+    <select id="findParentsByRoleId" resultMap="privilegeMap">
+        SELECT DISTINCT p.*
+        FROM role_privilege rp
+        LEFT JOIN privilege p
+        ON rp.privilege_id = p.id
+        WHERE rp.role_id =#{roleId} AND p.parent_id is NULL ;
+    </select>
+
+
+    <select id="findByParentIdAndRoleId" resultType="com.magicears.bpm.entity.Privilege">
+        SELECT DISTINCT m.*
+        FROM  role_privilege rm
+        LEFT JOIN privilege m
+        ON rm.privilege_id = m.id
+        WHERE rm.role_id = #{roleId} and parent_id=#{parentId};
+    </select>
+
+    <delete id="delete">
+        DELETE FROM privilege
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByParentId">
+        DELETE FROM privilege
+        WHERE parent_id = #{parentId}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace命名空间,作用就是对sql进行分类化管理,理解sql隔离
+注意:使用mapper代理方法开发,namespace有特殊重要的作用,namespace等于mapper接口地址-->
+<mapper namespace="com.magicears.bpm.dao.DepartmentDao">
+
+    <resultMap id="departmentMap" type="com.magicears.bpm.entity.Department">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="code" property="code"/>
+        <result column="description" property="description"/>
+        <result column="create_at" property="createAt"/>
+        <result column="update_at" property="updateAt"/>
+    </resultMap>
+
+    <sql id="departmentBasicSql">
+        id, name, description,code,create_at, update_at
+    </sql>
+
+
+    <select id="findByPage" resultMap="departmentMap">
+        SELECT
+        <include refid="departmentBasicSql"/>
+        FROM department
+        GROUP BY id
+        limit #{pageHelper.offset},#{pageHelper.size}
+        <if test="pageHelper.sortBy!=null">
+            ORDERY BY ${pageHelper.sortBy}
+        </if>
+    </select>
+
+    <select id="findTotalAmount" resultType="java.lang.Integer">
+        SELECT
+        count(id)
+        FROM department
+    </select>
+
+
+    <select id="find" resultMap="departmentMap">
+        SELECT
+        <include refid="departmentBasicSql"/>
+        FROM department
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.magicears.bpm.entity.Department">
+        INSERT INTO department
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            create_at,
+            update_at,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            NOW(),
+            NOW(),
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.magicears.bpm.entity.Department">
+        UPDATE department SET
+        <trim suffix="" suffixOverrides=",">
+            <if test="code!=null">
+                code=#{code},
+            </if>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+            update_at=NOW(),
+        </trim>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM department WHERE id = #{id}
+    </delete>
+
+</mapper>

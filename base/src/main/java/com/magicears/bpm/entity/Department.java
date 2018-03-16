@@ -8,15 +8,15 @@ import java.util.Date;
 /**
  * Created by admin on 2018/3/9.
  */
-public class department {
+public class Department {
 
     private Long id;
 
     private String name;
 
-    private String describe;
-
     private String description;
+
+    private String code;
 
     private Date createAt;
 
@@ -36,14 +36,6 @@ public class department {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescribe() {
-        return describe;
-    }
-
-    public void setDescribe(String describe) {
-        this.describe = describe;
     }
 
     public String getDescription() {
@@ -72,5 +64,13 @@ public class department {
 
     public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

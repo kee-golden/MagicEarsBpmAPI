@@ -12,6 +12,7 @@
     <modules>
         <module>api</module>
         <module>base</module>
+        <module>activiti</module>
     </modules>
 
     <parent>

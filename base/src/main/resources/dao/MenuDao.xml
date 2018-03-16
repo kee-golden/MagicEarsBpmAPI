@@ -21,6 +21,132 @@
         id, name, code,icon, type, action,sort, create_at, update_at, parent_id,target
     </sql>
 
+
+    <select id="find" resultMap="menuMap">
+        SELECT
+        <include refid="menuBasicSql"/>
+        FROM menu
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.magicears.bpm.entity.Menu">
+        INSERT INTO menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="target != null">
+                target,
+            </if>
+            <if test="action != null">
+                action,
+            </if>
+            <if test="parent != null">
+                parent_id,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="icon != null">
+                #{icon},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="target != null">
+                #{target},
+            </if>
+            <if test="action != null">
+                #{action},
+            </if>
+            <if test="parent != null">
+                #{parent.id},
+            </if>
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="createAt != null">
+                #{createAt},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.magicears.bpm.entity.Menu">
+        UPDATE menu SET
+        <trim suffix="" suffixOverrides=",">
+            <if test="code!=null">
+                code=#{code},
+            </if>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="type!=null">
+                type=#{type},
+            </if>
+            <if test="target!=null">
+                target=#{target},
+            </if>
+            <if test="icon!=null">
+                icon=#{icon},
+            </if>
+            <if test="action!=null">
+                action=#{action},
+            </if>
+            <if test="parent!=null">
+                parent_id=#{parent.id},
+            </if>
+            <if test="sort!=null">
+                sort=#{sort},
+            </if>
+            <if test="createAt!=null">
+                create_at=#{createAt},
+            </if>
+            <if test="updateAt==null">
+                update_at=#{updateAt},
+            </if>
+        </trim>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM menu
+        WHERE id = #{id}
+    </delete>
+
     <select id="findAllByUserId" resultMap="menuMap">
         SELECT DISTINCT menu.*
         FROM user_role user_role
@@ -28,6 +154,46 @@
         LEFT JOIN menu menu ON role_menu.menu_id = menu.id
         WHERE user_role.user_id = #{userId} order by menu.sort
     </select>
+
+
+    <select id="findParents" resultMap="menuMap">
+        SELECT
+        <include refid="menuBasicSql"/>
+
+        FROM menu
+        WHERE parent_id IS NULL;
+    </select>
+
+    <select id="findByParentId" resultMap="menuMap">
+        SELECT
+        <include refid="menuBasicSql"/>
+
+        FROM menu
+        WHERE parent_id = #{parentId};
+    </select>
+
+
+    <select id="findParentsByRoleId" resultMap="menuMap">
+        SELECT DISTINCT p.*
+        FROM role_menu rp
+        LEFT JOIN menu p
+        ON rp.menu_id = p.id
+        WHERE rp.role_id =#{roleId} AND p.parent_id is NULL ;
+    </select>
+
+    <select id="findByParentIdAndRoleId" resultType="com.magicears.bpm.entity.Menu">
+        SELECT DISTINCT m.*
+        FROM  role_menu rm
+        LEFT JOIN menu m
+        ON rm.menu_id = m.id
+        WHERE rm.role_id = #{roleId} and parent_id=#{parentId};
+    </select>
+
+    <delete id="deleteByParentId">
+        DELETE FROM menu
+        WHERE parent_id = #{parentId}
+    </delete>
+
 
 
 </mapper>

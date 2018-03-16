@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.magicears.bpm.dao.RoleMenuDao">
+
+    <resultMap id="roleMenuBasicMap" type="com.magicears.bpm.entity.RoleMenu">
+        <id column="id" property="id"/>
+        <association property="menu" javaType="com.magicears.bpm.entity.Menu">
+            <id column="menu_id" property="id"/>
+        </association>
+        <association property="role" javaType="com.magicears.bpm.entity.Role">
+            <id column="role_id" property="id"/>
+        </association>
+        <collection property="createAt" column="create_at"/>
+        <collection property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.magicears.bpm.entity.RoleMenu">
+        INSERT role_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="menu != null">
+                menu_id,
+            </if>
+            <if test="role != null">
+                role_id,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="menu != null">
+                #{menu.id},
+            </if>
+            <if test="role != null">
+                #{role.id},
+            </if>
+            <if test="createAt != null">
+                #{createAt},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt},
+            </if>
+        </trim>
+    </insert>
+
+
+    <delete id="deleteByRoleId">
+        DELETE FROM role_menu
+        WHERE role_id = #{roleId}
+    </delete>
+
+    <delete id="deleteByMenuId">
+        DELETE FROM role_menu
+        WHERE menu_id = #{menuId}
+    </delete>
+
+</mapper>

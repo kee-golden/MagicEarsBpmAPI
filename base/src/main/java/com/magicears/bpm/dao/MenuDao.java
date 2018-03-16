@@ -15,4 +15,14 @@ import java.util.Set;
 public interface MenuDao extends BaseMapper<Menu> {
 
     List<Menu> findAllByUserId(Long id);
+
+    List<Menu> findParents();
+
+    List<Menu> findByParentId(@Param("parentId") Long parentId);
+
+    List<Menu> findParentsByRoleId(@Param("roleId") Long roleId);
+
+    List<Menu> findByParentIdAndRoleId(@Param("parentId") Long parentId, @Param("roleId") Long roleId);
+
+    Integer deleteByParentId(@Param("parentId") Long parentId);
 }

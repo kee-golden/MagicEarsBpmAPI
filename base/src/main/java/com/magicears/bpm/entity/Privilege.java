@@ -30,8 +30,6 @@ public class Privilege {
 
     private Date updateAt;
 
-    private Boolean logStatus;
-
     private List<Privilege> children;
 
     private List<RolePrivilege> rolePrivilegeList;
@@ -110,14 +108,6 @@ public class Privilege {
 
     public void setSort(Long sort) {
         this.sort = sort;
-    }
-
-    public Boolean getLogStatus() {
-        return logStatus;
-    }
-
-    public void setLogStatus(Boolean logStatus) {
-        this.logStatus = logStatus;
     }
 
     @Override

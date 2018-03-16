@@ -15,6 +15,6 @@ import java.util.List;
 @Mapper
 public interface RoleDao extends BaseMapper<Role> {
 
-    List<UserRole> findByUser(@Param("user") User user);
+    Integer deleteUserRolesByRoleId(@Param("roleId") Long roleId);
 
 }

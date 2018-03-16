@@ -22,15 +22,84 @@
         id, name, code, create_at, update_at, description
     </sql>
 
-    <select id="findByUser" resultMap="userRoleResultMap">
+    <select id="findAll" resultMap="roleResultMap">
         SELECT
-        r.*, ar.user_id
-        FROM
-        user_role ar
-        LEFT JOIN role r ON ar.role_id = r.id
-        <if test="user != null">
-            WHERE ar.user_id = #{user.id}
-        </if>
+        <include refid="roleBasicMap"/>
+        FROM role
     </select>
+
+    <select id="find" resultMap="roleResultMap">
+        SELECT
+        <include refid="roleBasicMap"/>
+        FROM role
+        WHERE id = #{id}
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.magicears.bpm.entity.Role">
+        INSERT INTO role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            create_at,
+            update_at,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="code != null">
+                #{code},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            NOW(),
+            NOW(),
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.magicears.bpm.entity.Role">
+        UPDATE role SET
+        <trim suffix="" suffixOverrides=",">
+            <if test="code!=null">
+                code=#{code},
+            </if>
+            <if test="name!=null">
+                name=#{name},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+            update_at=NOW(),
+        </trim>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM role
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteUserRolesByRoleId">
+        DELETE FROM user_role
+        WHERE role_id = #{roleId}
+    </delete>
+
 
 </mapper>
