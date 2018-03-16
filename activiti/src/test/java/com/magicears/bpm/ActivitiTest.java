@@ -1,9 +1,11 @@
-package cpm.magicears.bpm;
+package com.magicears.bpm;
 
 import com.magicears.bpm.BootApiApplication;
+import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
@@ -13,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by L on 2018/3/13.
@@ -40,6 +44,48 @@ public class ActivitiTest {
         System.out.println("部署的时间："+deploy.getDeploymentTime());
     }
 
+    @Test//查询部署表对象数据
+    public void queryDeployment(){
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = processEngine.getRepositoryService();//与流程部署和定义相关的API
+        List<Deployment> list = repositoryService.createDeploymentQuery()
+                //条件查询
+                .deploymentName("请假流程")
+                .deploymentId("1")//
+//				.singleResult()//查询出一条结果
+                .orderByDeploymenTime().desc()//排序
+//				.listPage(firstResult, maxResults)//分页
+//				.count()//统计
+                .list();
+        for (Deployment deployment : list) {
+            System.out.println("部署编号："+deployment.getId());
+            System.out.println("部署名称："+deployment.getName());
+            System.out.println("------------------------");
+        }
+    }
+    @Test
+
+    //查询流程定义的表的数据
+    public void queryProcessDefinition(){
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = processEngine.getRepositoryService();//与流程部署和定义相关的API
+        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery()
+//		.processDefinitionKey(processDefinitionKey)//根据key来查询
+                .list();
+        for (ProcessDefinition processDefinition : list) {
+            System.out.println("流程定义的编号："+processDefinition.getId());
+            System.out.println("流程部署的编号："+processDefinition.getDeploymentId());
+        }
+    }
+
+    //删除流程定义（通过部署id）
+    @Test
+    public void deleteProcessDefinition(){
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = processEngine.getRepositoryService();//与流程部署和定义相关的API
+        repositoryService.deleteDeployment("1", true);
+    }
+
     //启动流程实例
     @Test
     public void startProcessInstance(){
@@ -48,14 +94,73 @@ public class ActivitiTest {
         //与运行过程中相关的api(流程实例和执行对象相关)--表示正在执行的
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         RuntimeService runtimeService = processEngine.getRuntimeService();
+        //在启动流程的时候同时保存一个变量
+//        Map<String, Object> variables = new HashMap<>();
+//        variables.put("company", "magic");
+
         //使用流程定义的key启动实例可以按照流程最新的版本启动-得到流程实例对象
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processDefinitionKey);
+//        ProcessInstance processInstance2 = runtimeService.startProcessInstanceByKey(processDefinitionKey,variables);
 
         //输出相关信息：对应数据库的字段—对应页面
         System.out.println("流程执行的ID："+processInstance.getId());
         System.out.println("流程实例ID："+processInstance.getProcessInstanceId());//现在值和执行对象ID一样，后面会讲不一样的地方
         System.out.println("流程定义ID："+processInstance.getProcessDefinitionId());
     }
+
+    //查询流程实例
+    @Test
+    public void queryProcessInstance(){
+        //与运行过程中相关的api(流程实例和执行对象相关)--表示正在执行的
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        List<ProcessInstance> list = runtimeService.createProcessInstanceQuery()
+                .list();
+        for (ProcessInstance processInstance : list) {
+            System.out.println("流程实例的id："+processInstance.getId());
+            System.out.println("流程实例的名字："+processInstance.getName());
+            System.out.println("流程实例对应的流程定义："+processInstance.getProcessDefinitionId());
+            System.out.println("--------------------------");
+        }
+    }
+
+    //查询活动节点坐标
+    @Test
+    public void queryActiveNodeZuobiao(){
+        //活动节点
+//        String act_id ="usertask1";
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RepositoryService repositoryService = processEngine.getRepositoryService();
+//        GraphicInfo graphicInfo = repositoryService.getBpmnModel("qingjia:1:4")
+//                .getGraphicInfo(act_id);//某活动节点的坐标
+//        System.out.println("高："+graphicInfo.getHeight());
+//        System.out.println("宽："+graphicInfo.getWidth());
+//        System.out.println("x："+graphicInfo.getX());
+//        System.out.println("y："+graphicInfo.getY());
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        List<String> activeActivityIds = runtimeService.getActiveActivityIds("7501");
+        for (String activeActivityId : activeActivityIds) {
+            GraphicInfo graphicInfo1 = repositoryService.getBpmnModel("qingjia:1:4")
+                    .getGraphicInfo(activeActivityId);//某活动节点的坐标
+            System.out.println("高："+graphicInfo1.getHeight());
+            System.out.println("宽："+graphicInfo1.getWidth());
+            System.out.println("x："+graphicInfo1.getX());
+            System.out.println("y："+graphicInfo1.getY());
+        }
+
+    }
+
+
+    //流程实例的删除
+    @Test
+    public void deleteProcessInstance(){
+        //与运行过程中相关的api(流程实例和执行对象相关)--表示正在执行的
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        RuntimeService runtimeService = processEngine.getRuntimeService();
+        runtimeService.deleteProcessInstance("qingjia:1:4", "不想请假了");
+    }
+
+
 
     //查询办理人的个人任务
     @Test
