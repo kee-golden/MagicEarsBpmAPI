@@ -149,7 +149,7 @@
         <profile>
             <id>dev</id>
             <properties>
-                <jdbc.url>jdbc:mysql://192.168.2.200:3306/bpm</jdbc.url>
+                <jdbc.url>jdbc:mysql://localhost:3306/bpm</jdbc.url>
                 <jdbc.username>root</jdbc.username>
                 <jdbc.password>Touch-Spring.com</jdbc.password>
                 <server.port>8081</server.port>

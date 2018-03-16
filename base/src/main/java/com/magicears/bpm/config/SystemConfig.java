@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix="system")
 public class SystemConfig {
     private String filePath;
-    public final static String TOKEN = "X-touchspring-Token";
+    public final static String TOKEN = "X-magicears-Token";
 
 
     public String getFilePath() {
