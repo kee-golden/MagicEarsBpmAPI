@@ -2,6 +2,12 @@ package com.magicears.bpm.dingtalk.url;
 
 public class DingTalkUrl {
 
+    //获取用户授权码
+    public static String snsToken = "https://oapi.dingtalk.com/sns/gettoken?appid=";
+
+    //获取用户授权的持久授权码
+    public static String tmpAuthCode = "https://oapi.dingtalk.com/sns/get_persistent_code?access_token=";
+
     //获取部门列表
     public static String departmentList = "https://oapi.dingtalk.com/department/list?access_token=";
 

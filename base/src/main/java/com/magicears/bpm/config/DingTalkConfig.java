@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 public class DingTalkConfig {
 
     private String accessToken;
+    private String appId;
+    private String appSecret;
 
     public String getAccessToken() {
         return accessToken;
@@ -15,5 +17,21 @@ public class DingTalkConfig {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getAppSecret() {
+        return appSecret;
+    }
+
+    public void setAppSecret(String appSecret) {
+        this.appSecret = appSecret;
     }
 }
