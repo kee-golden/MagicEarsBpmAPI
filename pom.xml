@@ -116,6 +116,17 @@
             <version>3.11</version>
         </dependency>
 
+
+        <!--钉钉sdk-->
+        <dependency>
+            <groupId>com.taobao</groupId>
+            <artifactId>openapi</artifactId>
+            <scope>system</scope>
+            <version>1.0</version>
+            <systemPath>${basedir}\api\data\lib\taobao-sdk-java-auto_1479188381469-20180316.jar
+            </systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -154,7 +165,7 @@
                 <jdbc.password>Touch-Spring.com</jdbc.password>
                 <server.port>8081</server.port>
                 <server.context.path>/api</server.context.path>
-                <system.filePath>${basedir}/data</system.filePath>
+                <system.filePath>${basedir}/api/data</system.filePath>
             </properties>
         </profile>
     </profiles>
