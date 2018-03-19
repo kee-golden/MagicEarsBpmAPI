@@ -28,3 +28,6 @@ mybatis:
 
 system:
   filePath: @system.filePath@
+
+dingtail:
+  accessToken: sdfsfsdfsdfsdfsdfsdf
