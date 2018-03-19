@@ -121,10 +121,7 @@
         <dependency>
             <groupId>com.taobao</groupId>
             <artifactId>openapi</artifactId>
-            <scope>system</scope>
             <version>1.0</version>
-            <systemPath>${basedir}\api\data\lib\taobao-sdk-java-auto_1479188381469-20180316.jar
-            </systemPath>
         </dependency>
 
     </dependencies>
