@@ -1,11 +1,14 @@
 package com.magicears.bpm.util;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import org.apache.poi.ss.formula.functions.T;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class JsonUtil {
 
@@ -50,7 +53,6 @@ public class JsonUtil {
     }
 
 
-
     /**
      * 转成map的
      *
@@ -60,9 +62,27 @@ public class JsonUtil {
     public static <T> Map<String, T> jsonToMaps(String jsonStr) {
         Map<String, T> map = null;
         if (gson != null) {
-            map = gson.fromJson(jsonStr, new TypeToken<Map<String, T>>() {
-            }.getType());
+            gson = new GsonBuilder()
+                    .registerTypeAdapter(
+                            new TypeToken<TreeMap<String, Object>>() {
+                            }.getType(),
+                            new JsonDeserializer<TreeMap<String, Object>>() {
+                                @Override
+                                public TreeMap<String, Object> deserialize(
+                                        JsonElement json, Type typeOfT,
+                                        JsonDeserializationContext context) throws JsonParseException {
+                                    TreeMap<String, Object> treeMap = new TreeMap<>();
+                                    JsonObject jsonObject = json.getAsJsonObject();
+                                    Set<Map.Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
+                                    for (Map.Entry<String, JsonElement> entry : entrySet) {
+                                        treeMap.put(entry.getKey(), entry.getValue());
+                                    }
+                                    return treeMap;
+                                }
+                            }).create();
+            map = gson.fromJson(jsonStr, new TypeToken<TreeMap<String, T>>(){}.getType());
         }
+
         return map;
     }
 

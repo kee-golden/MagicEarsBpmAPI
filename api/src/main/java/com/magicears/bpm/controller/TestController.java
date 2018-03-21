@@ -1,18 +1,16 @@
 package com.magicears.bpm.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
 import com.magicears.bpm.config.DingTalkConfig;
 import com.magicears.bpm.dao.TestDao;
-import com.magicears.bpm.dingtalk.url.DingTalkUrl;
-import com.magicears.bpm.util.HttpRequestUtil;
-import com.magicears.bpm.util.JsonUtil;
+import com.magicears.bpm.dingtalk.entity.AccessToken;
+import com.magicears.bpm.dingtalk.entity.Department;
+import com.magicears.bpm.dingtalk.entity.Organization;
+import com.magicears.bpm.service.DingTalkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by admin on 2018/3/6.
@@ -25,11 +23,14 @@ public class TestController {
 
     private final DingTalkConfig dingTalkConfig;
 
+    private final DingTalkService dingTalkService;
+
 
     @Autowired
-    public TestController(TestDao testDao, DingTalkConfig dingTalkConfig) {
+    public TestController(TestDao testDao, DingTalkConfig dingTalkConfig, DingTalkService dingTalkService) {
         this.testDao = testDao;
         this.dingTalkConfig = dingTalkConfig;
+        this.dingTalkService = dingTalkService;
     }
 
 
@@ -48,10 +49,18 @@ public class TestController {
 
 //        String url = DingTalkUrl.departmentList + dingTalkConfig.getAccessToken();
 //        String departmentLisStr = HttpRequestUtil.doHttpGet(url);
-        String url = DingTalkUrl.userList + dingTalkConfig.getAccessToken() + "&department_id=1";
-        String userList = HttpRequestUtil.doHttpGet(url);
+//        String url = DingTalkUrl.userList + dingTalkConfig.getAccessToken() + "&department_id=1";
+//        String userList = HttpRequestUtil.doHttpGet(url);
 
 
-        System.out.print(userList);
+//        System.out.print(userList);
+        // ab29d7fe8c1f301fac2638dc407e3bc0
+
+//        AccessToken accessToken = dingTalkService.getAccessToken();
+
+//        Organization organization = dingTalkService.getOrganization("ab29d7fe8c1f301fac2638dc407e3bc0");
+        Department department = dingTalkService.getDepartment("ab29d7fe8c1f301fac2638dc407e3bc0",51463161L);
+
+
     }
 }

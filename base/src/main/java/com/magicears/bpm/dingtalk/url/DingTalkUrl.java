@@ -2,6 +2,8 @@ package com.magicears.bpm.dingtalk.url;
 
 public class DingTalkUrl {
 
+    public static String accessToken = "https://oapi.dingtalk.com/gettoken";
+
     //获取用户授权码
     public static String snsToken = "https://oapi.dingtalk.com/sns/gettoken?appid=";
 
@@ -9,7 +11,7 @@ public class DingTalkUrl {
     public static String tmpAuthCode = "https://oapi.dingtalk.com/sns/get_persistent_code?access_token=";
 
     //获取部门列表
-    public static String departmentList = "https://oapi.dingtalk.com/department/list?access_token=";
+    public static String organizationList = "https://oapi.dingtalk.com/department/list?access_token=";
 
     //获取部门详情
     public static String departmentInfo = "https://oapi.dingtalk.com/department/get?access_token=";

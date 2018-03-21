@@ -1,42 +1,47 @@
 package com.magicears.bpm.service;
 
-import com.alibaba.fastjson.JSON;
 import com.magicears.bpm.config.DingTalkConfig;
+import com.magicears.bpm.dingtalk.entity.AccessToken;
+import com.magicears.bpm.dingtalk.entity.Department;
+import com.magicears.bpm.dingtalk.entity.ErroMessage;
+import com.magicears.bpm.dingtalk.entity.Organization;
 import com.magicears.bpm.dingtalk.url.DingTalkUrl;
 import com.magicears.bpm.emuns.DingTalkErrCode;
 import com.magicears.bpm.util.HttpRequestUtil;
 import com.magicears.bpm.util.JsonUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
-
+/**
+ * 钉钉服务的service
+ */
 @Transactional
 @Service
-public class DingTalkService {
+public class DingTalkService extends ErroMessage{
+
 
     private final DingTalkConfig dingTalkConfig;
 
+    @Autowired
     public DingTalkService(DingTalkConfig dingTalkConfig) {
         this.dingTalkConfig = dingTalkConfig;
     }
 
-
     /**
-     * 获取ACCESS_TOKEN
+     * 获取Access_Token
+     * 并且返回成功数据
      * @return
      */
-    public String getAccessToken () {
-        String accessTokenUrl = DingTalkUrl.snsToken + dingTalkConfig.getAppId() +  "&appsecret=" + dingTalkConfig.getAppSecret();
-        String accessToken = "";
+    public AccessToken getAccessToken() {
+        AccessToken accessToken = null;
+        String url = DingTalkUrl.accessToken + "?corpid="+dingTalkConfig.getCorpId()+"&corpsecret="+dingTalkConfig.getCorpSecret();
         try {
-            String  accessTokenStr  = HttpRequestUtil.doHttpGet(accessTokenUrl);
-            Map<String,Object> map = JsonUtil.jsonToMaps(accessTokenStr);
-            Integer errCode = (Integer) map.get("errCode");
-            if (errCode.equals(DingTalkErrCode.SUCCESS.getCode())) accessToken = map.get("access_token").toString();
+            String tokenStr = HttpRequestUtil.doHttpGet(url);
+            accessToken = JsonUtil.jsonToBean(tokenStr,AccessToken.class);
+            if (!accessToken.getErrcode().equals(DingTalkErrCode.SUCCESS.getCode())) return null;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,19 +50,51 @@ public class DingTalkService {
 
 
     /**
-     * 获取ACCESS_TOKEN
+     *  获取部门列表
+     *  并且返回成功数据
+     * @param accessToken
      * @return
      */
-    public String getTmpAuthCode (String code, String accessToken) {
-        String tmpAuthCode = "";
-        Map<String, Object> parmMap = new HashMap<String, Object>();
-        parmMap.put("tmp_auth_code", code);
-        String tmpAuthCodeStr = HttpRequestUtil.doHttpPost(DingTalkUrl.tmpAuthCode + accessToken,
-                JSON.toJSONString(parmMap));
-        Map<String,Object> map = JsonUtil.jsonToMaps(tmpAuthCodeStr);
-        Integer errCode = (Integer) map.get("errCode");
-        if (errCode.equals(DingTalkErrCode.SUCCESS.getCode())) tmpAuthCode = map.get("tmp_auth_code").toString();
-        return tmpAuthCode;
+    public Organization getOrganization (String  accessToken) {
+        Organization organization = null;
+        String url = DingTalkUrl.organizationList + accessToken;
+        try {
+            String organizationLisStr = HttpRequestUtil.doHttpGet(url);
+            System.out.print(organizationLisStr);
+            organization = JsonUtil.jsonToBean(organizationLisStr, Organization.class);
+            if (!organization.getErrcode().equals(DingTalkErrCode.SUCCESS.getCode())) return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return organization;
     }
+
+    /**
+     * 获取部门详情
+     * @param accessToken
+     * @param id
+     * @return
+     */
+    public Department getDepartment(String accessToken, Long id) {
+        Department department = null;
+        String url = DingTalkUrl.departmentInfo + accessToken + "&id=" + id;
+        try {
+            String departmentInfoStr = HttpRequestUtil.doHttpGet(url);
+            department = JsonUtil.jsonToBean(departmentInfoStr,Department.class);
+            if (!department.getErrcode().equals(DingTalkErrCode.SUCCESS.getCode())) return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return department;
+    }
+
+
+
+
+
+
+
+
+
 
 }

@@ -1,6 +1,7 @@
 package com.magicears.bpm.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.magicears.bpm.dingtalk.entity.ErroMessage;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
 /**
  * Created by admin on 2018/3/9.
  */
-public class Department {
+public class Department{
 
     private Long id;
 
