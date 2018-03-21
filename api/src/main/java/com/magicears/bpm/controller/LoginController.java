@@ -39,17 +39,16 @@ public class LoginController {
     @RequestMapping(value = "login")
     public ResultData login(String code) {
         loginService.getDingTalkUser(code);
-//        User user = userDao.findByUsername(loginName);
-//        if (user == null) {
-//            throw new UserNotFoundException();
-//        }
-//        String md5Code = MD5Util.getMD5Code(password);
-//        if (!StringUtils.equals(md5Code, user.getPassword())) {
-//            throw new UserPasswordNotEqualException();
-//        }
-//        UserDto userDto = new UserDto(user);
-//        String sign = JWTUtil.sign(userDto, 1000 * 60 * 60 * 24);
-        return ResultData.ok();
-//        return ResultData.ok().putDataValue("token", sign).putDataValue("user", userDto);
+        User user = userDao.findByUsername("user");
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        String md5Code = MD5Util.getMD5Code("1234");
+        if (!StringUtils.equals(md5Code, user.getPassword())) {
+            throw new UserPasswordNotEqualException();
+        }
+        UserDto userDto = new UserDto(user);
+        String sign = JWTUtil.sign(userDto, 1000 * 60 * 60 * 24);
+        return ResultData.ok().putDataValue("token", sign).putDataValue("user", userDto);
     }
 }

@@ -4,6 +4,7 @@ package com.magicears.bpm.emuns;
  * Created by admin on 2018/3/6.
  */
 public enum PrivilengeType {
+
     GET(1, "GET"),
     POST(2, "POST"),
     PUT(3, "PUT"),
